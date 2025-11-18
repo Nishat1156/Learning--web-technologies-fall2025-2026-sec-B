@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Step-by-Step Form</title>
+</head>
+<body>
+  <h2>PERSON PROFILE</h2>
+
+  <form id="stepForm">
+    <fieldset id="stepField">
+
+      <div class="step" id="step1">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required />
+        <br><br>
+        <button type="button" id="nextBtn1">Next</button>
+      </div>
+
+     
+      <div class="step" id="step2" style="display:none;">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+        <br><br>
+        <button type="button" id="nextBtn2">Next</button>
+      </div>
+
+      
+      <div class="step" id="step3" style="display:none;">
+        <label for="gender">Gender:</label>
+        <input type="radio" id="male" name="gender" value="male" />
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female" />
+        <label for="female">Female</label>
+        <input type="radio" id="other" name="gender" value="other" />
+        <label for="other">Other</label>
+        <br><br>
+        <button type="button" id="nextBtn3">Next</button>
+      </div>
+
+      
+      <div class="step" id="step4" style="display:none;">
+        <label for="dob">Date of Birth:</label>
+        <input type="text" id="dob" name="dob" placeholder="dd/mm/yyyy" maxlength="10" required />
+        <br><br>
+        <button type="button" id="nextBtn4">Next</button>
+      </div>
+
+    
+      <div class="step" id="step5" style="display:none;">
+        <label for="blood">Blood Group:</label>
+        <select name="blood" id="blood">
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+        </select>
+        <br><br>
+        <button type="button" id="nextBtn5">Next</button>
+      </div>
+
+   
+      <div class="step" id="step6" style="display:none;">
+        <label for="degree">Degree:</label>
+        <input type="checkbox" id="ssc" name="degree" value="SSC" />
+        <label for="ssc">SSC</label>
+        <input type="checkbox" id="hsc" name="degree" value="HSC" />
+        <label for="hsc">HSC</label>
+        <input type="checkbox" id="bsc" name="degree" value="BSc" />
+        <label for="bsc">BSc.</label>
+        <input type="checkbox" id="msc" name="degree" value="MSc" />
+        <label for="msc">MSc.</label>
+        <br><br>
+        <button type="button" id="nextBtn6">Next</button>
+      </div>
+
+      
+      <div class="step" id="step7" style="display:none;">
+        <label for="photo">Upload Photo:</label>
+        <input type="file" name="photo" id="photo" required />
+        <br><br>
+        <button type="button" id="nextBtn7">Next</button>
+      </div>
+
+  
+      <div class="step" id="step8" style="display:none;">
+        <button type="submit" id="submitBtn">Submit</button>
+      </div>
+    </fieldset>
+  </form>
+
+  <hr>
+  <h3>Entered Data:</h3>
+  <div id="summary" style="display:none;">
+    <p><strong>Name:</strong> <span id="summaryName"></span></p>
+    <p><strong>Email:</strong> <span id="summaryEmail"></span></p>
+    <p><strong>Gender:</strong> <span id="summaryGender"></span></p>
+    <p><strong>Date of Birth:</strong> <span id="summaryDob"></span></p>
+    <p><strong>Blood Group:</strong> <span id="summaryBlood"></span></p>
+    <p><strong>Degree(s):</strong> <span id="summaryDegree"></span></p>
+    <p><strong>Photo:</strong> <span id="summaryPhoto"></span></p>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const formData = {};
+
+   
+    function nextStep(step) {
+     
+      document.getElementById(`step${step}`).style.display = 'none';
+
+      currentStep++;
+      document.getElementById(`step${currentStep}`).style.display = 'block';
+    }
+ 
+   
+    function captureData() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const dob = document.getElementById('dob').value;
+      const bloodGroup = document.getElementById('blood').value;
+      const degreeArray = [];
+      document.querySelectorAll('input[name="degree"]:checked').forEach((checkbox) => {
+        degreeArray.push(checkbox.value);
+      });
+      const photo = document.getElementById('photo').files[0] ? 'Uploaded' : 'Not Uploaded';
+
+      formData.name = name;
+      formData.email = email;
+      formData.gender = gender;
+      formData.dob = dob;
+      formData.bloodGroup = bloodGroup;
+      formData.degree = degreeArray.join(', ');
+      formData.photo = photo;
+    }
+
+    document.getElementById('nextBtn1').addEventListener('click', function() {
+      if (document.getElementById('name').value.trim() !== '') {
+        nextStep(1);
+      } else {
+        alert('Please fill in your name.');
+      }
+    });
+
+    document.getElementById('nextBtn2').addEventListener('click', function() {
+      if (document.getElementById('email').value.trim() !== '') {
+        nextStep(2);
+      } else {
+        alert('Please enter your email.');
+      }
+    });
+
+
+    document.getElementById('nextBtn3').addEventListener('click', function() {
+      if (document.querySelector('input[name="gender"]:checked')) {
+        nextStep(3);
+      } else {
+        alert('Please select your gender.');
+      }
+    });
+
+    document.getElementById('nextBtn4').addEventListener('click', function() {
+      let dob = document.getElementById('dob').value.trim();
+      if (dob.length === 10 && dob.indexOf('/') === 2 && dob.lastIndexOf('/') === 5) {
+        nextStep(4);
+      } else {
+        alert('Please enter a valid date in dd/mm/yyyy format.');
+      }
+    });
+
+    document.getElementById('nextBtn5').addEventListener('click', function() {
+      if (document.getElementById('blood').value !== '') {
+        nextStep(5);
+      } else {
+        alert('Please select your blood group.');
+      }
+    });
+
+    document.getElementById('nextBtn6').addEventListener('click', function() {
+      nextStep(6);
+    });
+
+    document.getElementById('nextBtn7').addEventListener('click', function() {
+      if (document.getElementById('photo').files.length > 0) {
+        nextStep(7);
+      } else {
+        alert('Please upload your photo.');
+      }
+    });
+
+
+    document.getElementById('submitBtn').addEventListener('click', function(event) {
+      event.preventDefault(); 
+
+  
+      captureData();
+
+      
+      document.getElementById('summary').style.display = 'block';
+      document.getElementById('summaryName').textContent = formData.name;
+      document.getElementById('summaryEmail').textContent = formData.email;
+      document.getElementById('summaryGender').textContent = formData.gender;
+      document.getElementById('summaryDob').textContent = formData.dob;
+      document.getElementById('summaryBlood').textContent = formData.bloodGroup;
+      document.getElementById('summaryDegree').textContent = formData.degree;
+      document.getElementById('summaryPhoto').textContent = formData.photo;
+
+    
+      document.getElementById('stepForm').style.display = 'none';
+    });
+  </script>
+
+</body>
+</html>
